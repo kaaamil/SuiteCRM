@@ -591,9 +591,20 @@ class SugarFolder
         $this->retrieve($folderId);
 
         if ($this->is_dynamic) {
+            $selectQuery = $this->generateSugarsDynamicFolderQuery();
             $pattern = '/SELECT(.*?)(\s){1}FROM(\s){1}/is';  // ignores the case
-            $replacement = 'SELECT count(*) c FROM ';
-            $modifiedSelectQuery = preg_replace($pattern, $replacement, $this->generateSugarsDynamicFolderQuery(), 1);
+            
+            if ($this->folder_type === 'archived') {
+                $replacement = 'SELECT count(DISTINCT emails.id) FROM ';
+                $modifiedSelectQuery = preg_replace($pattern, $replacement, $selectQuery, 1);
+                
+                // remove GROUP BY statement
+                $pattern = '/GROUP BY emails\.id(\s)/s';
+                $modifiedSelectQuery = preg_replace($pattern, '', $modifiedSelectQuery, 1);
+            } else {
+                $replacement = 'SELECT count(*) c FROM ';
+                $modifiedSelectQuery = preg_replace($pattern, $replacement, $selectQuery, 1);
+            }
 
             $res = $this->db->query(from_html($modifiedSelectQuery));
         } else {
