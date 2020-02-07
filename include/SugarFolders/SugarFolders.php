@@ -595,7 +595,7 @@ class SugarFolder
             $modifiedSelectQuery = preg_replace($pattern, $replacement, $selectQuery, 1);
             
             // remove GROUP BY statement
-            $pattern = '/GROUP BY emails\.id(\s)/s';
+            $pattern = '/GROUP BY id(\s)?/s';
             $modifiedSelectQuery = preg_replace($pattern, '', $modifiedSelectQuery, 1);
         } else {
             $replacement = 'SELECT count(*) c FROM ';
