@@ -581,6 +581,38 @@ class SugarFolder
     }
 
     /**
+     * Get the count of items for dynamic folder
+     *
+     * @param bool $unread
+     * @return int
+     */
+    public function getDynamicFolderCount($unread = false){
+        $selectQuery = $this->generateSugarsDynamicFolderQuery();
+        $pattern = '/SELECT(.*?)(\s){1}FROM(\s){1}/is';  // ignores the case
+        
+        if ($this->folder_type === 'archived') {
+            $replacement = 'SELECT count(DISTINCT emails.id) c FROM ';
+            $modifiedSelectQuery = preg_replace($pattern, $replacement, $selectQuery, 1);
+            
+            // remove GROUP BY statement
+            $pattern = '/GROUP BY emails\.id(\s)/s';
+            $modifiedSelectQuery = preg_replace($pattern, '', $modifiedSelectQuery, 1);
+        } else {
+            $replacement = 'SELECT count(*) c FROM ';
+            $modifiedSelectQuery = preg_replace($pattern, $replacement, $selectQuery, 1);
+        }
+
+        $query = from_html($modifiedSelectQuery);
+        if($unread) $query .= " AND emails.status = 'unread'";
+        
+        $res = $this->db->query($query);
+        
+        $result = $this->db->fetchByAssoc($res);
+        
+        return $result['c']; 
+    }
+    
+    /**
      * Get the count of items
      *
      * @param  string $folderId
@@ -591,22 +623,7 @@ class SugarFolder
         $this->retrieve($folderId);
 
         if ($this->is_dynamic) {
-            $selectQuery = $this->generateSugarsDynamicFolderQuery();
-            $pattern = '/SELECT(.*?)(\s){1}FROM(\s){1}/is';  // ignores the case
-            
-            if ($this->folder_type === 'archived') {
-                $replacement = 'SELECT count(DISTINCT emails.id) FROM ';
-                $modifiedSelectQuery = preg_replace($pattern, $replacement, $selectQuery, 1);
-                
-                // remove GROUP BY statement
-                $pattern = '/GROUP BY emails\.id(\s)/s';
-                $modifiedSelectQuery = preg_replace($pattern, '', $modifiedSelectQuery, 1);
-            } else {
-                $replacement = 'SELECT count(*) c FROM ';
-                $modifiedSelectQuery = preg_replace($pattern, $replacement, $selectQuery, 1);
-            }
-
-            $res = $this->db->query(from_html($modifiedSelectQuery));
+            return $this->getDynamicFolderCount(false);
         } else {
             // get items and iterate through them
             $query = "SELECT count(*) c FROM folders_rel JOIN emails ON emails.id = folders_rel.polymorphic_id" .
@@ -617,11 +634,11 @@ class SugarFolder
             }
 
             $res = $this->db->query($query);
+            
+            $result = $this->db->fetchByAssoc($res);
+            
+            return $result['c'];
         }
-
-        $result = $this->db->fetchByAssoc($res);
-
-        return $result['c'];
     }
 
     /**
@@ -635,10 +652,7 @@ class SugarFolder
         $this->retrieve($folderId);
 
         if ($this->is_dynamic) {
-            $pattern = '/SELECT(.*?)(\s){1}FROM(\s){1}/is';  // ignores the case
-            $replacement = 'SELECT count(*) c FROM ';
-            $modified_select_query = preg_replace($pattern, $replacement, $this->generateSugarsDynamicFolderQuery(), 1);
-            $r = $this->db->query(from_html($modified_select_query) . " AND emails.status = 'unread'");
+            return $this->getDynamicFolderCount(true);
         } else {
             // get items and iterate through them
             $query = "SELECT count(*) c FROM folders_rel fr JOIN emails on fr.folder_id = " . $this->db->quoted($folderId) .
@@ -649,12 +663,12 @@ class SugarFolder
                 $query .= " AND (emails.assigned_user_id is null or emails.assigned_user_id = '')";
             }
 
-            $r = $this->db->query($query);
+            $res = $this->db->query($query);
+            
+            $result = $this->db->fetchByAssoc($res);
+            
+            return $result['c'];
         }
-
-        $a = $this->db->fetchByAssoc($r);
-
-        return $a['c'];
     }
 
 
