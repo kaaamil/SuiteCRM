@@ -29,6 +29,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 function perform_aos_save($focus)
 {
+    $currency = fetch_aos_currency($focus);
+    
     foreach ($focus->field_defs as $field) {
         $fieldName = $field['name'];
         $fieldNameDollar = $field['name'].'_usdollar';
@@ -36,14 +38,6 @@ function perform_aos_save($focus)
         if (isset($focus->field_defs[$fieldNameDollar])) {
             $focus->$fieldNameDollar = '';
             if (!number_empty($focus->field_defs[$field['name']])) {
-                $currency = BeanFactory::newBean('Currencies');
-                if (!isset($focus->currency_id)) {
-                    LoggerManager::getLogger()->warn('Currency is not set for perform AOS save.');
-                    $currency->retrieve();
-                } else {
-                    $currency->retrieve($focus->currency_id);
-                }
-
                 if (!isset($focus->$fieldName)) {
                     LoggerManager::getLogger()->warn('Perform AOS Save error: Undefined field name of focus. Focus and field name were: ' . get_class($focus) . ', ' . $fieldName);
                 }
@@ -63,6 +57,19 @@ function perform_aos_save($focus)
         }
     }
 }
+
+function fetch_aos_currency($focus)
+{
+    $currency = new Currency();
+    if (!isset($focus->currency_id)) {
+        LoggerManager::getLogger()->warn('Currency is not set for perform AOS save.');
+        $currency->retrieve();
+    } else {
+        $currency->retrieve($focus->currency_id);
+    }
+    return $currency;
+}
+
 
 function amountToConvertIsDatabaseValue($focus, $fieldName)
 {
