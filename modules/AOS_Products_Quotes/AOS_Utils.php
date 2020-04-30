@@ -62,7 +62,7 @@ function fetch_aos_currency($focus)
 {
     $currency = new Currency();
     if (!isset($focus->currency_id)) {
-        LoggerManager::getLogger()->warn('Currency is not set for perform AOS save.');
+        LoggerManager::getLogger()->warn('Currency is not defined in focus');
         $currency->retrieve();
     } else {
         $currency->retrieve($focus->currency_id);
