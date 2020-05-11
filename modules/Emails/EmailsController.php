@@ -409,6 +409,16 @@ class EmailsController extends SugarController
      */
     public function action_DeleteDraft()
     {
+        if($this->bean->status != 'draft'){
+            $this->view = 'ajax';
+            $response['errors'] = [
+                'type' => get_class($this->bean),
+                'id' => $this->bean->id,
+                'title' => "Can not delete this Email as not a draft"
+            ];
+            echo json_encode($response);
+            return;
+        }
         $this->bean->deleted = '1';
         $this->bean->status = 'draft';
         $this->bean->save();
