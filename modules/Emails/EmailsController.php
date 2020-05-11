@@ -253,6 +253,7 @@ class EmailsController extends SugarController
 
             if ($this->bean->send()) {
                 $this->bean->status = 'sent';
+                $this->bean->date_sent_received = TimeDate::getInstance()->nowDb();
                 $this->bean->save();
             } else {
                 // Don't save status if the email is a draft.
