@@ -4677,6 +4677,12 @@ eoq;
                 $bean->new_with_id = true;
                 $bean->type = 'out';
                 $bean->status = 'draft';
+		$bean->date_entered = null;
+		$bean->date_modified = null;
+		$bean->uid = null;
+		$bean->date_start = null;
+		$bean->time_start = null;
+		$bean->last_synced = null;		    
             }
         }
 
