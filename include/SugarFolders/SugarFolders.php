@@ -1223,11 +1223,9 @@ class SugarFolder
     {
         $this->dynamic_query = $this->db->quote($this->dynamic_query);
 
-        if ((!empty($this->id) && $this->new_with_id == false) || (empty($this->id) && $this->new_with_id == true)) {
-            if (empty($this->id) && $this->new_with_id == true) {
-                $guid = create_guid();
-                $this->id = $guid;
-            }
+        if (empty($this->id) || (!empty($this->id) && $this->new_with_id == true)) {
+            if (empty($this->id))
+                $this->id = create_guid();
 
             $query = "INSERT INTO folders (id, name, folder_type, parent_folder, has_child, is_group, " .
                 "is_dynamic, dynamic_query, assign_to_id, created_by, modified_by, deleted) VALUES (" .
@@ -1247,10 +1245,6 @@ class SugarFolder
                 // create default subscription
                 $this->addSubscriptionsToGroupFolder();
             }
-
-            // if parent_id is set, update parent's has_child flag
-            $query3 = "UPDATE folders SET has_child = 1 WHERE id = " . $this->db->quoted($this->parent_folder);
-            $r3 = $this->db->query($query3);
         } else {
             $query = "UPDATE folders SET " .
                 "name = " . $this->db->quoted($this->name) . ", " .
@@ -1259,6 +1253,12 @@ class SugarFolder
                 "assign_to_id = " . $this->db->quoted($this->assign_to_id) . ", " .
                 "modified_by = " . $this->db->quoted($this->currentUser->id) . " " .
                 "WHERE id = " . $this->db->quoted($this->id);
+        }
+        
+        // if parent_id is set, update parent's has_child flag
+        if (!empty($this->parent_folder)) {
+            $query3 = "UPDATE folders SET has_child = 1 WHERE id = " . $this->db->quoted($this->parent_folder);
+            $this->db->query($query3);
         }
 
         return $this->db->query($query, true);
