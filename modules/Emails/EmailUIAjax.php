@@ -74,8 +74,8 @@ function handleSubs($subs, $email, $json, $user = null)
 
     $sub = array();
     foreach ($viewFolders as $f) {
-        $query = 'SELECT * FROM folders WHERE folders.id = "' . $f
-            . '" OR folders.parent_folder = "' . $f . '"';
+        $q_f = $db->quoted($f);
+        $query = "SELECT * FROM folders WHERE folders.id = {$q_f} OR folders.parent_folder = {$q_f}";
         $result = $db->query($query);
         while (($row = $db->fetchByAssoc($result))) {
             $sub[] = $row['id'];
