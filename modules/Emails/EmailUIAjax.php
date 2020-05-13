@@ -65,7 +65,7 @@ function handleSubs($subs, $email, $json, $user = null)
     }
 
     $GLOBALS['log']->debug("********** EMAIL 2.0 - Asynchronous - at: setFolderViewSelection");
-    $viewFolders = $subs;
+    $viewFolders = array_unique(array_filter($subs));
     $user->setPreference('showFolders', base64_encode(serialize($viewFolders)), '', 'Emails');
     $tree = $email->et->getMailboxNodes(false);
     $return = $tree->generateNodesRaw();
@@ -74,8 +74,8 @@ function handleSubs($subs, $email, $json, $user = null)
 
     $sub = array();
     foreach ($viewFolders as $f) {
-        $query = 'SELECT * FROM folders WHERE folders.id LIKE "' . $f
-            . '" OR folders.parent_folder LIKE "' . $f . '"';
+        $query = 'SELECT * FROM folders WHERE folders.id = "' . $f
+            . '" OR folders.parent_folder = "' . $f . '"';
         $result = $db->query($query);
         while (($row = $db->fetchByAssoc($result))) {
             $sub[] = $row['id'];
