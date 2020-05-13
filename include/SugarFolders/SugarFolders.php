@@ -96,6 +96,12 @@ class SugarFolder
 
 
     // Public attributes
+    
+    /**
+     * Unique object identifier
+     *
+     * @var string
+     */
     public $id;
     public $name;
     public $parent_folder;
@@ -108,11 +114,31 @@ class SugarFolder
     public $modified_by;
     public $date_created;
     public $date_modified;
+    
+    /**
+     * true if this bean has been deleted, false otherwise.
+     *
+     * @var BOOL
+     */
     public $deleted;
     public $folder_type;
 
+    /**
+     * A pointer to the database object
+     *
+     * @var DBManager
+     */
     public $db;
-    public $new_with_id = true;
+    
+    /**
+     * When creating a folder, you can specify a value in the id column as
+     * long as that value is unique.  During save, if the system finds an
+     * id, it assumes it is an update.  Setting new_with_id to true will
+     * make sure the system performs an insert instead of an update.
+     *
+     * @var bool -- default false
+     */
+    public $new_with_id = false;
 
     // Core queries
     public $core;
@@ -1392,7 +1418,7 @@ class SugarFolder
                 $this->$k = $v;
             }
 
-            $new_with_id  = false;
+            $this->new_with_id  = false;
             return true;
         }
 
