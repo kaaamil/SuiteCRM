@@ -1222,9 +1222,14 @@ class SugarFolder
     public function save($addSubscriptions = true)
     {
         $this->dynamic_query = $this->db->quote($this->dynamic_query);
+        
+        $isUpdate = true;
+        if (empty($this->id) || $this->new_with_id) {
+            $isUpdate = false;
+        }
 
-        if (empty($this->id) || (!empty($this->id) && $this->new_with_id == true)) {
-            if (empty($this->id))
+        if (!$isUpdate) {
+            if (!$this->new_with_id)
                 $this->id = create_guid();
 
             $query = "INSERT INTO folders (id, name, folder_type, parent_folder, has_child, is_group, " .
