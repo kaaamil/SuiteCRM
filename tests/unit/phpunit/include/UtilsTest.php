@@ -98,8 +98,6 @@ class UtilsTest extends SuitePHPUnitFrameworkTestCase
     public function testget_languages()
     {
         $this->assertEquals(['en_us' => 'English (US)'], get_languages());
-        $this->assertEquals(['en_us' => 'English (US)'], get_all_languages());
-        $this->assertEquals('English (US)', get_language_display('en_us'));
     }
 
     public function testget_current_language()
@@ -176,4 +174,12 @@ class UtilsTest extends SuitePHPUnitFrameworkTestCase
         // Make sure it also understands strings with whitespace.
         $this->assertEquals(8192, return_bytes('  8K  '));
     }
+    
+    public function testguid()
+    {
+        $this->assertTrue(is_guid(create_guid()));
+        $this->assertTrue(is_guid("8e6a7d58-eb95-492a-9f6c-53b8d9a942ca"));
+        $this->assertFalse(is_guid("not-a-guid"));
+    }
+    
 }
