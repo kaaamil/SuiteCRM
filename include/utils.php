@@ -1356,7 +1356,7 @@ function create_guid()
     
     $charid = md5(uniqid(rand(), true));
     $hyphen = chr(45);// "-"
-    $uuid = 
+    $uuid = ''
         .substr($charid, 0, 8).$hyphen
         .substr($charid, 8, 4).$hyphen
         .substr($charid,12, 4).$hyphen
@@ -2002,7 +2002,7 @@ function clean_special_arguments()
         clean_string($_SERVER['PHP_SELF'], 'SAFED_GET');
     }
     
-    if (!empty($_REQUEST) {
+    if (!empty($_REQUEST)) {
         if (!empty($_REQUEST['login_theme'])) {
             clean_string($_REQUEST['login_theme'], 'STANDARD');
         }
