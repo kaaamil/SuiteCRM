@@ -189,6 +189,8 @@ class SubPanelTiles
         $tabs = array();
         $tabs_properties = array();
         $tab_names = array();
+        
+        $module_sub_panels = array();
 
         $default_div_display = 'inline';
         if (!empty($sugar_config['hide_subpanels_on_login'])) {
