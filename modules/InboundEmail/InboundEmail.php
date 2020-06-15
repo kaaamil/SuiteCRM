@@ -4460,6 +4460,8 @@ class InboundEmail extends SugarBean
                         // only save if doing a full import, else we want only the binaries
                         $attach->save();
                     }
+                } else {
+                  continue;                           
                 } // end if disposition type 'attachment'
             }// end ifdisposition
             //Retrieve contents of subtype rfc8822
@@ -4501,9 +4503,15 @@ class InboundEmail extends SugarBean
                         // only save if doing a full import, else we want only the binaries
                         $attach->save();
                     }
+                }else{
+                    continue;
                 }
-            }
-            $this->saveAttachmentBinaries($attach, $msgNo, $thisBc, $part, $forDisplay);
+            } else {
+                continue;
+            }            
+            
+            if($attach)
+              $this->saveAttachmentBinaries($attach, $msgNo, $thisBc, $part, $forDisplay);
         } // end foreach
     }
 
@@ -4559,7 +4567,7 @@ class InboundEmail extends SugarBean
      * @param object part IMAP standard object that contains the "parts" of this section of email
      * @param bool $forDisplay
      */
-    public function saveAttachmentBinaries($attach, $msgNo, $thisBc, $part, $forDisplay)
+    public function saveAttachmentBinaries(Note $attach, $msgNo, $thisBc, $part, $forDisplay)
     {
         $cacheDir = $GLOBALS['sugar_config']['cache_dir'] . 'images/';
 
@@ -4579,7 +4587,7 @@ class InboundEmail extends SugarBean
         // download the attachment if we didn't do it yet
         if (!file_exists($uploadDir . $fileName)) {
             if (!is_resource($this->conn)) {
-                LoggerManager::getLogger()->fatal('Inbounc Email Connection is not valid resource for saving attachment binaries.');
+                LoggerManager::getLogger()->fatal('Inbound Email Connection is not valid resource for saving attachment binaries.');
 
                 return false;
             }
@@ -4607,8 +4615,10 @@ class InboundEmail extends SugarBean
             }
 
             if (copy($uploadDir . $fileName, sugar_cached("images/{$fileName}.") . strtolower($part->subtype))) {
-                $id = substr($part->id, 1, -1); //strip <> around
-                $this->inlineImages[$id] = $attach->id . "." . strtolower($part->subtype);
+                if (isset($part->id)) {
+                    $id = substr($part->id, 1, -1); //strip <> around
+                    $this->inlineImages[$id] = $attach->id . "." . strtolower($part->subtype);
+                }
             } else {
                 $GLOBALS['log']->debug('InboundEmail could not copy ' . $uploadDir . $fileName . ' to cache');
             }
@@ -4883,7 +4893,7 @@ class InboundEmail extends SugarBean
         global $current_user;
 
         if (!is_resource($this->conn)) {
-            LoggerManager::getLogger()->fatal('Inbounc Email Connection is not valid resource for getting duplicate email id.');
+            LoggerManager::getLogger()->fatal('Inbound Email Connection is not valid resource for getting duplicate email id.');
 
             return false;
         }
@@ -6151,7 +6161,7 @@ class InboundEmail extends SugarBean
                 $a = $this->db->fetchByAssoc($r);
 
                 $date = date('r', strtotime($a['last_run']));
-                LoggerManager::getLogger()->debug("-----> getNewMessageIds() executed query: {$q}");
+                LoggerManager::getLogger()->debug("-----> " . __FUNCTION__ . "() executed query: {$q}");
             } else {
                 $date = $storedOptions['only_since_last'];
             }
@@ -6169,7 +6179,7 @@ class InboundEmail extends SugarBean
             $ret = $this->getImap()->search('UNDELETED UNSEEN');
         }
 
-        LoggerManager::getLogger()->debug('-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
+        LoggerManager::getLogger()->debug('-----> ' . __FUNCTION__ . '() got ' . (is_array($ret)?count($ret):'no') . ' new Messages');
 
         return $ret;
     }
