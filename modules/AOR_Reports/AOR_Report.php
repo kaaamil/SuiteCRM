@@ -1002,7 +1002,7 @@ class AOR_Report extends Basic
             if ($field['total'] && isset($totals[$label])) {
                 $type = $field['total'];
                 $total = $this->calculateTotal($type, $totals[$label]);
-                $params = (isset($field['params'])?isset($field['params']:[]);
+                $params = (isset($field['params'])?$field['params']:[]);
                 switch ($type) {
                     case 'SUM':
                     case 'AVG':
