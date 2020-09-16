@@ -6025,7 +6025,7 @@ class InboundEmail extends SugarBean
                 }
             }
         } else {
-            $exMacro = explode('%1', $aCase->getEmailSubjectMacro());
+            $exMacro = explode('%1', $macro);
             $open = $exMacro[0];
             $close = $exMacro[1];
 
