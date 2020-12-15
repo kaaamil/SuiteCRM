@@ -748,6 +748,9 @@ $mod_strings = array(
     'LBL_SAML_LOGOUT_URL' => 'SLO URL',
     'LBL_SAML_LOGIN_URL_DESC' => 'Enter Login URL',
     'LBL_SAML_LOGOUT_URL_DESC' => 'Enter Logout URL',
+    'LBL_SAML_ENTITYID' => 'Entity ID',
+    'LBL_SAML_ENTITYID_DESC' => 'Enter Entity ID',
+	
 
     'LBL_GLOBAL_SEARCH_SETTINGS_TITLE' => 'Select the module(s) that users will be able to search against using the Global Search.',
     'LBL_SELECT_MODULES' => 'Advanced',
