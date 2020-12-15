@@ -48,7 +48,7 @@ if (isset($GLOBALS['sugar_config']['onelogin'])){
     $spBase = $GLOBALS['sugar_config']['site_url'].'/index.php?action=Login&module=Users';
     $settingsInfo = array(
         'sp' => array(
-            'entityId' => isset($GLOBALS['sugar_config']['SAML_entityid']) ? $GLOBALS['sugar_config']['SAML_entityid'] : $spBase,
+            'entityId' => !empty($GLOBALS['sugar_config']['SAML_entityid']) ? $GLOBALS['sugar_config']['SAML_entityid'] : $spBase,
             'assertionConsumerService' => array(
                 'url' => $spBase,
             ),
@@ -58,7 +58,7 @@ if (isset($GLOBALS['sugar_config']['onelogin'])){
             'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified',
         ),
         'idp' => array(
-            'entityId' => isset($GLOBALS['sugar_config']['SAML_entityid']) ? $GLOBALS['sugar_config']['SAML_entityid'] : $spBase,
+            'entityId' => !empty($GLOBALS['sugar_config']['SAML_entityid']) ? $GLOBALS['sugar_config']['SAML_entityid'] : $spBase,
             'singleSignOnService' => array(
                 'url' => isset($GLOBALS['sugar_config']['SAML_loginurl']) ? $GLOBALS['sugar_config']['SAML_loginurl'] : '',
             ),
