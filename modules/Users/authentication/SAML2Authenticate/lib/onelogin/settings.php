@@ -42,27 +42,31 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-$spBase = $GLOBALS['sugar_config']['site_url'].'/index.php?action=Login&module=Users';
-$settingsInfo = array(
-    'sp' => array(
-        'entityId' => $spBase,
-        'assertionConsumerService' => array(
-            'url' => $spBase,
+if (isset($GLOBALS['sugar_config']['onelogin'])){
+    $settingsInfo = $GLOBALS['sugar_config']['onelogin'];
+} else {
+    $spBase = $GLOBALS['sugar_config']['site_url'].'/index.php?action=Login&module=Users';
+    $settingsInfo = array(
+        'sp' => array(
+            'entityId' => isset($GLOBALS['sugar_config']['SAML_entityid']) ? $GLOBALS['sugar_config']['SAML_entityid'] : $spBase,
+            'assertionConsumerService' => array(
+                'url' => $spBase,
+            ),
+            'singleLogoutService' => array(
+                'url' => $spBase,
+            ),
+            'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified',
         ),
-        'singleLogoutService' => array(
-            'url' => $spBase,
+        'idp' => array(
+            'entityId' => isset($GLOBALS['sugar_config']['SAML_entityid']) ? $GLOBALS['sugar_config']['SAML_entityid'] : $spBase,
+            'singleSignOnService' => array(
+                'url' => isset($GLOBALS['sugar_config']['SAML_loginurl']) ? $GLOBALS['sugar_config']['SAML_loginurl'] : '',
+            ),
+            'singleLogoutService' => array(
+                'url' => isset($GLOBALS['sugar_config']['SAML_logouturl']) ? $GLOBALS['sugar_config']['SAML_logouturl'] : '',
+            ),
+            'x509cert' => isset($GLOBALS['sugar_config']['SAML_X509Cert']) ? $GLOBALS['sugar_config']['SAML_X509Cert'] : '',
         ),
-        'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
-    ),
-    'idp' => array(
-        'entityId' => $spBase,
-        'singleSignOnService' => array(
-            'url' => isset($GLOBALS['sugar_config']['SAML_loginurl']) ? $GLOBALS['sugar_config']['SAML_loginurl'] : '',
-        ),
-        'singleLogoutService' => array(
-            'url' => isset($GLOBALS['sugar_config']['SAML_logouturl']) ? $GLOBALS['sugar_config']['SAML_logouturl'] : '',
-        ),
-        'x509cert' => isset($GLOBALS['sugar_config']['SAML_X509Cert']) ? $GLOBALS['sugar_config']['SAML_X509Cert'] : '',
-    ),
-    'strict' => false,
-);
+        'strict' => false,
+    );
+}
