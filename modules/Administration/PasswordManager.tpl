@@ -493,27 +493,24 @@
                                     </td><td>&nbsp;</td><td>&nbsp;</td></tr>
                                  <tr>
                                     <td colspan='4'>
-                                       <table  cellspacing='0' cellpadding='1' id='saml_display' style='display:{$saml_display}' width='100%'>
-                                            <tr>
-                                             <td scope="row" valign='middle' nowrap>{$MOD.LBL_SAML_LOGIN_URL} {sugar_help text=$MOD.LBL_SAML_LOGIN_URL_DESC}</td>
-                                             <td align="left"  valign='middle'><input name="SAML_loginurl" size='35' type="text" value="{$config.SAML_loginurl}"></td>
-
+                                       <table cellspacing='0' cellpadding='1' id='saml_display' style='display:{$saml_display}' width='100%'>
+                                          <tr>
+                                             <td scope="row" valign='middle' nowrap>{$MOD.LBL_SAML_ENTITYID} {sugar_help text=$MOD.LBL_SAML_ENTITYID_DESC}</td>
+                                             <td align="left" valign='middle'><input name="SAML_entityid" size='35' type="text" value="{$config.SAML_entityid}"></td>
                                           </tr>
-										   <tr>
-											   <td scope="row" valign='middle' nowrap>{$MOD.LBL_SAML_LOGOUT_URL} {sugar_help text=$MOD.LBL_SAML_LOGOUT_URL_DESC}</td>
-											   <td align="left"  valign='middle'><input name="SAML_logouturl" size='35' type="text" value="{$config.SAML_logouturl}"></td>
-
-										   </tr>
+                                          <tr>
+                                             <td scope="row" valign='middle' nowrap>{$MOD.LBL_SAML_LOGIN_URL} {sugar_help text=$MOD.LBL_SAML_LOGIN_URL_DESC}</td>
+                                             <td align="left" valign='middle'><input name="SAML_loginurl" size='35' type="text" value="{$config.SAML_loginurl}"></td>
+                                          </tr>
+										  <tr>
+											 <td scope="row" valign='middle' nowrap>{$MOD.LBL_SAML_LOGOUT_URL} {sugar_help text=$MOD.LBL_SAML_LOGOUT_URL_DESC}</td>
+											 <td align="left" valign='middle'><input name="SAML_logouturl" size='35' type="text" value="{$config.SAML_logouturl}"></td>
+										  </tr>
                                           <tr>
                                              <td width='25%' scope="row" valign='top' nowrap>{$MOD.LBL_SAML_CERT} {sugar_help text=$MOD.LBL_SAML_CERT_DESC}</td>{$settings.proxy_host}
-                                             <td width='25%' align="left"  valign='top'><textarea style='height:200px;width:600px' name="SAML_X509Cert" >{$config.SAML_X509Cert}</textarea></td>
-
+                                             <td width='25%' align="left" valign='top'><textarea style='height:200px;width:600px' name="SAML_X509Cert" >{$config.SAML_X509Cert}</textarea></td>
                                           </tr>
-
-
                      </table>
-
-
                </td>
             </tr>
          </table>
