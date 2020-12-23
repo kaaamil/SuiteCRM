@@ -741,6 +741,7 @@ $mod_strings = array(
     'Worksheet' => 'Worksheet',
     'LBL_SAML_ENABLE' => 'Enable SAML Authentication',
     'LBL_SAML_HELP_TXT' => 'When SAML authentication is enabled, passwords can only be handled through SAML. None of the SuiteCRM Password Management feature settings will apply.',
+    'LBL_SAML_CUSTOM_TXT' => 'Custom onelogin config has been applied, refer to config.php.',
     'LBL_SAML_TITLE' => 'SAML Authentication',
     'LBL_SAML_CERT' => 'X509 Certificate',
     'LBL_SAML_CERT_DESC' => 'Enter X509 Certificate',
