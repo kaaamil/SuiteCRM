@@ -464,12 +464,16 @@
 							</table>
 
 						             <!-- start SAML -->
-                            {if !empty($config.authenticationClass)
-                                && ($config.authenticationClass == 'SAMLAuthenticate'
-                                || $config.authenticationClass == 'SAML2Authenticate')}
-                           {assign var='saml_enabled_checked' value='CHECKED'}
-                           {assign var='saml_display' value='inline'}
-                        {else}
+                     {if !empty($config.authenticationClass)
+                         && ($config.authenticationClass == 'SAMLAuthenticate' || $config.authenticationClass == 'SAML2Authenticate')}
+                         {if !empty($CONF.SAML_onelogin)}
+                             {assign var='saml_enabled_checked' value='CHECKED'}
+                             {assign var='saml_display' value='inline'}
+			 {else}
+			     {assign var='saml_enabled_checked' value='CHECKED'}
+                             {assign var='saml_display' value='none'}
+			 {/if}
+                     {else}
                            {assign var='saml_enabled_checked' value=''}
                            {assign var='saml_display' value='none'}
                      {/if}
@@ -493,6 +497,7 @@
                                     </td><td>&nbsp;</td><td>&nbsp;</td></tr>
                                  <tr>
                                     <td colspan='4'>
+{if !empty($CONF.SAML_onelogin)}
                                        <table cellspacing='0' cellpadding='1' id='saml_display' style='display:{$saml_display}' width='100%'>
                                           <tr>
                                              <td scope="row" valign='middle' nowrap>{$MOD.LBL_SAML_ENTITYID} {sugar_help text=$MOD.LBL_SAML_ENTITYID_DESC}</td>
@@ -514,6 +519,9 @@
                </td>
             </tr>
          </table>
+{else}
+<b>{$MOD.LBL_SAML_CUSTOM_TXT}</b>
+{/if}
          <!-- end SAML -->
 					</td>
 				</tr>
